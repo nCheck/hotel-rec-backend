@@ -6,7 +6,8 @@ var rideSchema = new Schema({
     
     name : String,
     userId : String,
-    text : String
+    text : String,
+    rating : Number
 
 });
 

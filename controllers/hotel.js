@@ -67,9 +67,9 @@ module.exports.addReview = ( req , res ) =>{
 
     var b = req.body;
     let hotelId = req.params.hotelId,
-        name = b.name, text = b.text;
+        name = b.name, text = b.text, rating = b.rating;
     
-    Review.create( { hotelId,name,text } ).then( rev =>{
+    Review.create( { hotelId,name,text,rating } ).then( rev =>{
 
         Hotel.findOneAndUpdate({hotelId}, { $push : { reviews : rev } } ) .then( hotel =>{
 
