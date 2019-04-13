@@ -71,11 +71,23 @@ module.exports.addReview = ( req , res ) =>{
     
     Review.create( { hotelId,name,text,rating } ).then( rev =>{
 
-        Hotel.findOneAndUpdate({hotelId}, { $push : { reviews : rev } } ) .then( hotel =>{
+        Hotel.findOne( { hotelId } ).then( doc =>{
+            var old = doc.rating,
+                users = doc.ratedBy;
+            var newRate = (( old * users ) + parseFloat(rating)) / ( users + 1 );
+            doc.rating = newRate;
+            doc.ratedBy = users + 1;
+            doc.save()
 
-            res.send( hotel )
+            Hotel.findOneAndUpdate({hotelId}, { $push : { reviews : rev } } ) .then( hotel =>{
 
-        } ).catch( err => res.send({error : err}) )
+                res.send( hotel )
+    
+            } ).catch( err => res.send({error : err}) )
+
+        } ).catch( err => res.send({error : err}) )    
+
+
 
     } ).catch( err => res.send({error : err}) )
 
